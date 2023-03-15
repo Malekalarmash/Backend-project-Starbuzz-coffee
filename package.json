@@ -1,0 +1,33 @@
+{
+  "name": "backend-project-digitalcrafts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Malekalarmash/Backend-project-DigitalCrafts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Malekalarmash/Backend-project-DigitalCrafts/issues"
+  },
+  "homepage": "https://github.com/Malekalarmash/Backend-project-DigitalCrafts#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.21",
+    "pg": "^8.10.0",
+    "postgres": "^3.3.4",
+    "sequelize": "^6.29.3",
+    "sqlite3": "^5.1.5",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.0"
+  }
+}

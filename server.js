@@ -44,7 +44,7 @@ app.use('/css', express.static(__dirname + 'public/css'))
 
 
 app.get('/mycart', async (req, res) => {
-    const myCart = await starbuzzcoffee.create({ productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl })
+    //const myCart = await starbuzzcoffee.create({ productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl })
     // res.send(myCart)
     res.render('mycart')
 })

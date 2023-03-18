@@ -6,12 +6,15 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
+//const users = Sequelize.import('./models/users');
 const { users } = require('./models')
 const bcrypt = require('bcrypt');
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
-const sequelize = new Sequelize("sqlite::memory:");
+//const sequelize = new Sequelize("sqlite::memory:");
+//const { starbuzzcoffee } = require('./models')
+const ejs = require("ejs");
 
 const initializePassport = require('./passport-config')
 
@@ -36,11 +39,32 @@ app.use(passport.session())
 
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-    res.status(200).send("Okay")
-})
+// Use this function to bulk delete 
+async function bulkDelete() {
+    const product = await starbuzzcoffee.destroy({ where: { id: [7, 8, 9, 10] } })
+    console.log(product)
+}
 
-app.post('/', (req, res) => {
+app.get('/home', async (req, res) => {
+    const product = await starbuzzcoffee.findAll()
+    res.render('index', { item: product })
+})
+// Render the create listing page
+app.get('/createListing', (req, res) => {
+    res.render('createListing')
+})
+// Create a new product
+app.post('/createListing', async (req, res) => {
+    const { productName, price, description, imageurl } = req.body
+    const newProduct = {
+        productName: productName,
+        price: price,
+        description: description,
+        imageurl: imageurl
+    }
+    console.log(req.body)
+    await starbuzzcoffee.create(newProduct)
+    res.redirect('/home')
 
 })
 
@@ -53,7 +77,7 @@ app.delete('/', (req, res) => {
 })
 
 app.get('/home', (req, res) => {
-    res.render('index.ejs', {name: req.user.name})
+    res.render('index.ejs')
 })
 
 app.get('/register', (req, res) => {
@@ -65,6 +89,7 @@ app.post('/register', async (req, res) => {
     bcrypt.hash(req.body.password, 10, async function(err, hash) {
         
         const post = await users.create({ name: req.body.name , email: req.body.email , password: hash });
+        //const post = await users.create
         res.redirect('/login')
         //res.send(post)
     });

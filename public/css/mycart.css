@@ -1,0 +1,35 @@
+* {
+        padding: 0;
+        margin: 0;
+        text-decoration: none;
+        list-style: none;
+        box-sizing: border-box;
+    }
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.shoppingcart {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.mycart {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;   
+}
+
+h3 {
+    display: flex;
+    flex-direction: row;
+}

@@ -2,19 +2,21 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("sqlite::memory:");
+// const sequelize = new Sequelize("sqlite::memory:");
 const { starbuzzcoffee } = require('./models')
 const ejs = require("ejs");
-
+app.use(express.static("public"))
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
+app.use(express.json())
 
 // Use this function to bulk delete 
 async function bulkDelete() {
-    const product = await starbuzzcoffee.destroy({ where: { id: [7, 8, 9, 10] } })
+    const product = await starbuzzcoffee.destroy({ where: { id: [11, 18, 17] } })
     console.log(product)
 }
+// bulkDelete()
 
 app.get('/home', async (req, res) => {
     const product = await starbuzzcoffee.findAll()
@@ -51,6 +53,6 @@ app.get('/', (req, res) => {
 
 })
 
-app.listen(port = 3000, () => {
+app.listen(port = 5430, () => {
     console.log("App is running on port", port)
 })

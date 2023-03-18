@@ -7,6 +7,8 @@ const app = express()
 const bodyParser = require('body-parser')
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
 //const users = Sequelize.import('./models/users');
+const { starbuzzcoffee } = require('./models')
+const ejs = require("ejs");
 const { users } = require('./models')
 const bcrypt = require('bcrypt');
 const passport = require('passport')
@@ -14,7 +16,6 @@ const flash = require('express-flash')
 const session = require('express-session')
 //const sequelize = new Sequelize("sqlite::memory:");
 //const { starbuzzcoffee } = require('./models')
-const ejs = require("ejs");
 
 const initializePassport = require('./passport-config')
 
@@ -37,13 +38,16 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
+// const sequelize = new Sequelize("sqlite::memory:");
+app.use(express.static("public"))
 app.use(bodyParser.json())
 
 // Use this function to bulk delete 
 async function bulkDelete() {
-    const product = await starbuzzcoffee.destroy({ where: { id: [7, 8, 9, 10] } })
+    const product = await starbuzzcoffee.destroy({ where: { id: [11, 18, 17] } })
     console.log(product)
 }
+// bulkDelete()
 
 app.get('/home', async (req, res) => {
     const product = await starbuzzcoffee.findAll()
@@ -105,6 +109,6 @@ app.post('/login', passport.authenticate('local', {
  failureFlash: true
 }))
 
-app.listen(port = 3000, () => {
+app.listen(port = 5430, () => {
     console.log("App is running on port", port)
 })

@@ -14,8 +14,6 @@ const bcrypt = require('bcrypt');
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
-//const sequelize = new Sequelize("sqlite::memory:");
-//const { starbuzzcoffee } = require('./models')
 
 const initializePassport = require('./passport-config')
 
@@ -26,7 +24,7 @@ initializePassport(
 )
 
 
-app.set('view-engine', 'ejs')
+app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
@@ -51,7 +49,8 @@ async function bulkDelete() {
 
 app.get('/home', async (req, res) => {
     const product = await starbuzzcoffee.findAll()
-    res.render('index', { item: product })
+    res.render('index.ejs', { item: product })
+    //res.render('index.ejs')
 })
 // Render the create listing page
 app.get('/createListing', (req, res) => {

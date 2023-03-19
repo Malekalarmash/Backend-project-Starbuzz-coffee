@@ -1,6 +1,6 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+
+require('dotenv').config()
+
 
 const express = require('express')
 const app = express()
@@ -14,7 +14,6 @@ const bcrypt = require('bcrypt');
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
-
 const initializePassport = require('./passport-config')
 
 initializePassport(
@@ -22,7 +21,6 @@ initializePassport(
     email => users.findOne({ where: { email: email } }),
     id => users.findOne({ where: { id: id } })
 )
-
 
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
@@ -42,28 +40,40 @@ app.use(bodyParser.json())
 app.use(express.static('public'));
 app.use('/css', express.static(__dirname + 'public/css'))
 
-
 app.get('/mycart', async (req, res) => {
     //const myCart = await starbuzzcoffee.create({ productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl })
     // res.send(myCart)
     res.render('mycart')
 })
+
 // Use this function to bulk delete 
 async function bulkDelete() {
-    const product = await starbuzzcoffee.destroy({ where: { id: [11, 18, 17] } })
+    const product = await starbuzzcoffee.destroy({ where: { id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] } })
     console.log(product)
 }
 // bulkDelete()
 
+// Render the home page
 app.get('/home', async (req, res) => {
     const product = await starbuzzcoffee.findAll()
     res.render('index.ejs', { item: product })
-    //res.render('index.ejs')
+
 })
 // Render the create listing page
 app.get('/createListing', (req, res) => {
     res.render('createListing')
 })
+// Render the product details page
+app.get('/productDetails/:id', async (req, res) => {
+    const id = req.params.id
+    const products = await starbuzzcoffee.findOne({
+        where: {
+            id: id
+        }
+    })
+    res.render('product-details', { product: products })
+})
+
 // Create a new product
 app.post('/createListing', async (req, res) => {
     const { productName, price, description, imageurl } = req.body
@@ -73,7 +83,6 @@ app.post('/createListing', async (req, res) => {
         description: description,
         imageurl: imageurl
     }
-    console.log(req.body)
     await starbuzzcoffee.create(newProduct)
     res.redirect('/home')
 })
@@ -159,6 +168,6 @@ app.post('/login', passport.authenticate('local', {
     failureFlash: true
 }))
 
-app.listen(port = 5430, () => {
+app.listen(port = 5432, () => {
     console.log("App is running on port", port)
 })

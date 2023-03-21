@@ -17,13 +17,13 @@
     <div class="container justify-content-center mt-5 p-5" style="background-color: #fff9e7;">
         <h3>This is Home page</h3>
         <div class="input-group flex-nowrap justify-content-center" style="width: 30%;">
-            <span class="input-group-text" id="addon-wrapping">Search</span>
             <form action="/" method="post" class="d-flex">
                 <input type="text" name="myCart" class="form-control" aria-label="search"
                     aria-describedby="addon-wrapping">
-                <input type="submit" value="Add" class="btn btn-lg btn-primary">
+                <span class="input-group-text" id="addon-wrapping">Search</span>
             </form>
         </div>
+        <img src="public/img/coffeebeans.jpeg" alt="">
         <div class="container d-flex justify-content-center flex-wrap">
             <% item.forEach(function (product){%>
                 <div class="card m-5" style="width: 18rem;">

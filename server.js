@@ -168,6 +168,6 @@ app.post('/login', passport.authenticate('local', {
     failureFlash: true
 }))
 
-app.listen(port = 5432, () => {
+app.listen(port = 3000, () => {
     console.log("App is running on port", port)
 })

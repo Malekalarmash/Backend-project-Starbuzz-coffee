@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Malekalarmash/Backend-project-DigitalCrafts#readme",
   "dependencies": {
+    "b": "^2.0.1",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "bootstrap": "^5.3.0-alpha1",

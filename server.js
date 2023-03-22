@@ -135,9 +135,6 @@ app.delete('/mycart/delete/:id', async (req, res) => {
     res.send(String(removeCoffee));
 })
 
-// app.get('/home', (req, res) => {
-//     res.render('index.ejs')
-// })
 
 function calculateTotal(item, req) {
     total = 0;

@@ -2,16 +2,20 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
-//const users = Sequelize.import('./models/users');
 const { starbuzzcoffee } = require('./models')
+const { cart } = require('./models')
 const ejs = require("ejs");
 const { users } = require('./models')
 const bcrypt = require('bcrypt');
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
-const initializePassport = require('./passport-config')
+const initializePassport = require('./passport-config');
+const { add } = require('winston');
 require('dotenv').config()
+// Define the association between starbuzzcoffee model and cart model
+starbuzzcoffee.hasMany(cart)
+cart.belongsTo(starbuzzcoffee)
 initializePassport(
     passport,
     email => users.findOne({ where: { email: email } }),
@@ -30,16 +34,11 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-// const sequelize = new Sequelize("sqlite::memory:");
 app.use(express.static("public"))
 app.use(bodyParser.json())
 app.use('/css', express.static(__dirname + 'public/css'))
 
-app.get('/mycart', async (req, res) => {
-    //const myCart = await starbuzzcoffee.create({ productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl })
-    // res.send(myCart)
-    res.render('mycart')
-})
+
 
 // Use this function to bulk delete 
 async function bulkDelete() {
@@ -91,17 +90,38 @@ app.get('/footer', (req, res) => {
     res.render('partials/footer')
 })
 
-// app.post('/', async (req, res) => {
-//     const myCart = await starbuzzcoffee.create({ productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl })
-//     // res.send(myCart)
-//     console.log(req.body)
-//     // let imageurl = req.body.imageurl;
-//     // let price = req.body.price;
-//     // let description = req.body.description;
-//     // let productName = req.body.productName;
-//     // let product = {imageurl:imageurl,price:price,description:description,productName:productName};
-//     res.redirect('/')
-// })
+// Render the cart page
+app.get('/mycart', async (req, res) => {
+    const addedToCart =
+        await cart.findAll({
+            include: [{ model: starbuzzcoffee }]
+        })
+    // res.send(myCart)
+    res.render('mycart', { myCart: addedToCart })
+})
+// Add item to the cart
+app.post('/add-to-cart/:id', async (req, res) => {
+    const id = req.params.id
+    const addedToCart = await cart.findOne({
+        where: {
+            id: id
+        },
+        include: starbuzzcoffee
+    })
+    console.log("++++++++", starbuzzcoffee.product)
+    await cart.create(addedToCart)
+    res.redirect('/home')
+})
+// Deleteing a cart item
+app.post('/delete-cart/:id', async (req, res) => {
+    const id = req.params.id
+    const deleteCartItem = await cart.destroy({
+        where: {
+            id: id
+        }
+    })
+    res.redirect('/mycart')
+})
 
 app.put('/', (req, res) => {
 

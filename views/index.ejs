@@ -40,14 +40,18 @@
                         <p class="card-text">
                             <%= product.description %>
                         </p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
+                        <form action="/add-to-cart/<%= product.id %>" method="POST">
+                            <button><a type="submit" id="<%= product.id %>" class="btn btn-primary">Add to
+                                    Cart</a></button>
+                        </form>
                     </div>
                 </div>
                 <% }); %>
         </div>
-
     </div>
-
 </body>
+<script>
+
+</script>
 
 </html>

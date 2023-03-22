@@ -12,11 +12,17 @@ module.exports = {
       user: {
         type: Sequelize.STRING
       },
+      productId: {
+        type: Sequelize.INTEGER
+      },
       productName: {
         type: Sequelize.STRING
       },
       quantity: {
         type: Sequelize.STRING
+      },
+      starbuzzcoffeeId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

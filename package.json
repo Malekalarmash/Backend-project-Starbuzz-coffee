@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "run start": "node server.js"
+    "run start": "nodemon node server.js "
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.17.3",
     "mysql2": "^3.2.0",
-    "nodemon": "^2.0.21",
+    "nodemon": "^2.0.22",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pg": "^8.10.0",

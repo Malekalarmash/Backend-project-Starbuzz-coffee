@@ -1,0 +1,1 @@
+{"body":{"email":"asdasd@adasdas.com","name":"asdasd@asdasd","password":"123"},"level":"error","message":"Name should contain only letters","method":"POST","parameters":{},"path":"/register","service":"signup","timestamp":1679690200128}

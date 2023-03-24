@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
-const { starbuzzcoffee } = require('./models')
+const { product } = require('./models')
 const { cart } = require('./models')
 const ejs = require("ejs");
 const { users } = require('./models')
@@ -41,9 +41,9 @@ app.all('*', (req, res, next) => {
     next()
 })
 
-// Define the association between starbuzzcoffee model and cart model
-starbuzzcoffee.hasMany(cart)
-cart.belongsTo(starbuzzcoffee)
+// Define the association between product model and cart model
+// users.hasMany(cart)
+// cart.belongsTo(users)
 initializePassport(
     passport,
     email => users.findOne({ where: { email: email } }),
@@ -70,15 +70,15 @@ app.use('/css', express.static(__dirname + 'public/css'))
 
 // Use this function to bulk delete 
 async function bulkDelete() {
-    const product = await starbuzzcoffee.destroy({ where: { id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] } })
-    console.log(product)
+    const getProduct = await product.destroy({ where: { id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] } })
+    console.log(getProduct)
 }
 // bulkDelete()
 
 // Render the home page
 app.get('/home', async (req, res) => {
-    const product = await starbuzzcoffee.findAll()
-    res.render('index.ejs', { item: product })
+    const getProduct = await product.findAll()
+    res.render('index.ejs', { item: getProduct })
 
 })
 // Render the create listing page
@@ -88,7 +88,7 @@ app.get('/createListing', (req, res) => {
 // Render the product details page
 app.get('/productDetails/:id', async (req, res) => {
     const id = req.params.id
-    const products = await starbuzzcoffee.findOne({
+    const products = await product.findOne({
         where: {
             id: id
         }
@@ -115,7 +115,7 @@ app.post('/createListing', async (req, res) => {
             description: description,
             imageurl: imageurl
         }
-        await starbuzzcoffee.create(newProduct)
+        await product.create(newProduct)
         res.redirect('/home')
     }
 
@@ -135,7 +135,7 @@ app.get('/footer', (req, res) => {
 app.get('/mycart', async (req, res) => {
     const addedToCart =
         await cart.findAll({
-            include: [{ model: starbuzzcoffee }]
+            include: [{ model: product }]
         })
     // res.send(myCart)
     res.render('mycart', { myCart: addedToCart })
@@ -149,9 +149,9 @@ app.post('/add-to-cart/:id', async (req, res) => {
         where: {
             id: id,
         },
-        include: starbuzzcoffee
+        include: product
     })
-    console.log("++++++++", starbuzzcoffee.product)
+    console.log("++++++++", product.product)
     await cart.create(addedToCart)
     res.redirect('/home')
 })
@@ -176,7 +176,7 @@ app.put('/', (req, res) => {
 
 app.delete('/mycart/delete/:id', async (req, res) => {
     const id = req.params.id;
-    let removeCoffee = await starbuzzcoffee.destroy({
+    let removeCoffee = await product.destroy({
         where: { id },
     });
     res.send(String(removeCoffee));
@@ -193,7 +193,7 @@ function calculateTotal(item, req) {
 }
 
 app.put('/mycart/change/:id', async (req, res) => {
-    let myNewCoffee = await starbuzzcoffee.update(
+    let myNewCoffee = await product.update(
         { productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl },
 
         {

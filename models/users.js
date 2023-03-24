@@ -1,3 +1,12 @@
+// Cart items belong to cart
+// User has many carts 
+// cart belong to a user  
+// Product has many cart items
+// CartItem is an instance of a prodcut that has been added to the cart 
+
+
+const { cart } = require('./cart')
+
 'use strict';
 const {
   Model
@@ -11,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      users.hasMany(models.cart)
+      users.sync()
     }
   }
   users.init({
@@ -23,9 +34,4 @@ module.exports = (sequelize, DataTypes) => {
   });
   return users;
 };
-// Cart items belong to cart
-// User has many carts 
-// cart belong to a user  
-// Product has many cart items
-// CartItem is an instance of a prodcut that has been added to the cart 
-npx sequelize - cli model: generate--name User--attributes firstName: string, lastName: string, email: string
+

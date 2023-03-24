@@ -7,12 +7,40 @@ const { cart } = require('./models')
 const ejs = require("ejs");
 const { users } = require('./models')
 const bcrypt = require('bcrypt');
+const logger = require('./logger')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const initializePassport = require('./passport-config');
 const { add } = require('winston');
 require('dotenv').config()
+let errors = [];
+
+
+function output(req, level, message) {
+    logger.log({
+      method: req.method,
+      path: req.path,
+      level: level,
+      parameters: req.params,
+      body: req.body,
+      message: message,
+      timestamp: Date.now()
+    })
+    
+  }
+
+app.all('*', (req, res, next) => {
+    logger.info({
+      method: req.method,
+      path: req.path,
+      parameters: req.params,
+      body: req.body,
+      timestamp: Date.now()
+    })
+    next()
+  })
+
 // Define the association between starbuzzcoffee model and cart model
 starbuzzcoffee.hasMany(cart)
 cart.belongsTo(starbuzzcoffee)
@@ -71,15 +99,28 @@ app.get('/productDetails/:id', async (req, res) => {
 // Create a new product
 app.post('/createListing', async (req, res) => {
     const { productName, price, description, imageurl } = req.body
-    const newProduct = {
-        productName: productName,
-        price: price,
-        description: description,
-        imageurl: imageurl
+    //let errors = [];
+
+    if (!productName || !price || !description || !imageurl) {
+        output(req, 'error', ' All fields are required')
+        errors.push('All fields are required')
+        res.render('createListing.ejs', { errors: errors })
+
     }
-    await starbuzzcoffee.create(newProduct)
-    res.redirect('/home')
+    
+        else{
+            const newProduct = {
+                productName: productName,
+                price: price,
+                description: description,
+                imageurl: imageurl
+            }
+            await starbuzzcoffee.create(newProduct)
+            res.redirect('/home')
+        }
+        
 })
+
 app.get('/navbar', (req, res) => {
 
     res.render('partials/navbar')
@@ -99,12 +140,14 @@ app.get('/mycart', async (req, res) => {
     // res.send(myCart)
     res.render('mycart', { myCart: addedToCart })
 })
+
 // Add item to the cart
 app.post('/add-to-cart/:id', async (req, res) => {
     const id = req.params.id
+    const name= req.params.productName
     const addedToCart = await cart.findOne({
         where: {
-            id: id
+            id: id, 
         },
         include: starbuzzcoffee
     })
@@ -112,6 +155,7 @@ app.post('/add-to-cart/:id', async (req, res) => {
     await cart.create(addedToCart)
     res.redirect('/home')
 })
+
 // Deleteing a cart item
 app.post('/delete-cart/:id', async (req, res) => {
     const id = req.params.id
@@ -120,6 +164,9 @@ app.post('/delete-cart/:id', async (req, res) => {
             id: id
         }
     })
+    if(deleteCartItem ===0){
+        res.status(404).sendStatus('Id not found')
+    }
     res.redirect('/mycart')
 })
 
@@ -147,12 +194,18 @@ function calculateTotal(item, req) {
 
 app.put('/mycart/change/:id', async (req, res) => {
     let myNewCoffee = await starbuzzcoffee.update(
-        { productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl }, {
+        { productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl },
+        
+        {
         where: {
             id: req.params.id,
         }
     });
-    res.send(myNewCoffee)
+    if (!myNewCoffee || !myNewCoffee[0]){
+        output(req, 'error', 'Coffee not found')
+        return res.status(404).send('Coffee not found');
+    }
+    res.send(myNewCoffee);
 })
 
 app.get('/register', (req, res) => {
@@ -160,15 +213,33 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
+    const nameCheck = /^[a-zA-Z]+$/;
+    const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const { name, email, password } = req.body;
+    //let errors = [];
 
-    bcrypt.hash(req.body.password, 10, async function (err, hash) {
+    if (!name.match(nameCheck)) {
+        output(req, 'error', 'Name should contain only letters')
+        errors.push('Name should contain only letters');
+         //res.status(400).send('Name should contain only letters');
+    } else if (!email.match(emailCheck)) {
+        output(req, 'error', 'Invalid email address')
+        errors.push('Invalid email address');
+        //res.status(400).send('Invalid email address');
+    } else {  
+        bcrypt.hash(req.body.password, 10, async function (err, hash) {
+            if (err) {
+                res.status(500).send('Internal Server Error')
+            } else {
+                const post = await users.create({ name, email, password: hash });
+                res.redirect('/login');
+            }
+        });
+    }
 
-        const post = await users.create({ name: req.body.name, email: req.body.email, password: hash });
-        //const post = await users.create
-        res.redirect('/login')
-        //res.send(post)
-    });
-})
+    res.render('register.ejs', { errors: errors });
+});
+
 
 app.get('/login', (req, res) => {
     res.render('login.ejs')

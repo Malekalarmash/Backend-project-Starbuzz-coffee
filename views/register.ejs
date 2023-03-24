@@ -9,12 +9,20 @@
     </style>
 </head>
 <body>
-<div class="container">
+    <%= let errors = [] %>
+
+<div class="container" >
 <div class="col-sm-6 col-sm-offset-3">
 
     <h1><span class="fa fa-sign-in"></span> Signup</h1>
 
-  
+    <% if (errors.length > 0) { %>
+        <ul>
+          <% for (let i = 0; i < errors.length; i++) { %>
+            <li><%= errors[i] %></li>
+          <% } %>
+        </ul>
+      <% } %>
 
     <!-- LOGIN FORM -->
     <form action="/register" method="post">

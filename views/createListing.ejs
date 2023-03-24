@@ -14,6 +14,17 @@
 
     <div class="container justify-content-center mt-5 p-5" style="background-color: #fff9e7; width: 50%;">
         <h3>Create a listing</h3>
+       <% let errors = []; %>
+
+       <% if (errors.length > 0) { %>
+        <ul>
+          <% for (let i = 0; i < errors.length; i++) { %>
+            <li><%= errors[i] %></li>
+          <% } %>
+        </ul>
+      <% } %>
+
+
         <form class="row g-3" method="POST" action="/createListing">
             <div class="col-md-6">
                 <label for="productName" class="form-label">Product Name</label>

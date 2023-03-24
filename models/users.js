@@ -23,3 +23,9 @@ module.exports = (sequelize, DataTypes) => {
   });
   return users;
 };
+// Cart items belong to cart
+// User has many carts 
+// cart belong to a user  
+// Product has many cart items
+// CartItem is an instance of a prodcut that has been added to the cart 
+npx sequelize - cli model: generate--name User--attributes firstName: string, lastName: string, email: string

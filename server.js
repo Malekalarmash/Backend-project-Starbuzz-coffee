@@ -19,27 +19,27 @@ let errors = [];
 
 function output(req, level, message) {
     logger.log({
-      method: req.method,
-      path: req.path,
-      level: level,
-      parameters: req.params,
-      body: req.body,
-      message: message,
-      timestamp: Date.now()
+        method: req.method,
+        path: req.path,
+        level: level,
+        parameters: req.params,
+        body: req.body,
+        message: message,
+        timestamp: Date.now()
     })
-    
-  }
+
+}
 
 app.all('*', (req, res, next) => {
     logger.info({
-      method: req.method,
-      path: req.path,
-      parameters: req.params,
-      body: req.body,
-      timestamp: Date.now()
+        method: req.method,
+        path: req.path,
+        parameters: req.params,
+        body: req.body,
+        timestamp: Date.now()
     })
     next()
-  })
+})
 
 // Define the association between starbuzzcoffee model and cart model
 starbuzzcoffee.hasMany(cart)
@@ -107,18 +107,18 @@ app.post('/createListing', async (req, res) => {
         res.render('createListing.ejs', { errors: errors })
 
     }
-    
-        else{
-            const newProduct = {
-                productName: productName,
-                price: price,
-                description: description,
-                imageurl: imageurl
-            }
-            await starbuzzcoffee.create(newProduct)
-            res.redirect('/home')
+
+    else {
+        const newProduct = {
+            productName: productName,
+            price: price,
+            description: description,
+            imageurl: imageurl
         }
-        
+        await starbuzzcoffee.create(newProduct)
+        res.redirect('/home')
+    }
+
 })
 
 app.get('/navbar', (req, res) => {
@@ -144,10 +144,10 @@ app.get('/mycart', async (req, res) => {
 // Add item to the cart
 app.post('/add-to-cart/:id', async (req, res) => {
     const id = req.params.id
-    const name= req.params.productName
+    const name = req.params.productName
     const addedToCart = await cart.findOne({
         where: {
-            id: id, 
+            id: id,
         },
         include: starbuzzcoffee
     })
@@ -164,7 +164,7 @@ app.post('/delete-cart/:id', async (req, res) => {
             id: id
         }
     })
-    if(deleteCartItem ===0){
+    if (deleteCartItem === 0) {
         res.status(404).sendStatus('Id not found')
     }
     res.redirect('/mycart')
@@ -195,13 +195,13 @@ function calculateTotal(item, req) {
 app.put('/mycart/change/:id', async (req, res) => {
     let myNewCoffee = await starbuzzcoffee.update(
         { productName: req.body.productName, price: req.body.price, description: req.body.description, imageurl: req.body.imageurl },
-        
+
         {
-        where: {
-            id: req.params.id,
-        }
-    });
-    if (!myNewCoffee || !myNewCoffee[0]){
+            where: {
+                id: req.params.id,
+            }
+        });
+    if (!myNewCoffee || !myNewCoffee[0]) {
         output(req, 'error', 'Coffee not found')
         return res.status(404).send('Coffee not found');
     }
@@ -221,12 +221,12 @@ app.post('/register', async (req, res) => {
     if (!name.match(nameCheck)) {
         output(req, 'error', 'Name should contain only letters')
         errors.push('Name should contain only letters');
-         //res.status(400).send('Name should contain only letters');
+        //res.status(400).send('Name should contain only letters');
     } else if (!email.match(emailCheck)) {
         output(req, 'error', 'Invalid email address')
         errors.push('Invalid email address');
         //res.status(400).send('Invalid email address');
-    } else {  
+    } else {
         bcrypt.hash(req.body.password, 10, async function (err, hash) {
             if (err) {
                 res.status(500).send('Internal Server Error')

@@ -27,6 +27,7 @@
     "express-ejs-layouts": "^2.5.1",
     "express-flash": "^0.0.2",
     "express-session": "^1.17.3",
+    "logger": "^0.0.1",
     "mysql2": "^3.2.0",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",

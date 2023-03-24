@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       cart.belongsTo(models.users)
-      // cart.sync()
+      cart.sync()
     }
   }
   cart.init({}, {

@@ -94,23 +94,20 @@
       </tr>
     </thead>
     <tbody class="table-group-divider">
-      <% myCart.forEach(function(cartItems){ %>
-        <tr>
-          <th scope="row">1</th>
-          <td>
-            <%= cartItems.productName %>
-          </td>
-          <td><button class="btn btn-success" onclick="increase()">+</button><input id=inc type="number"><button
-              class="btn btn-warning" onclick="decrease()">-</button></td>
-              <td>5.00</td>
-          <td><button class="btn btn-warning">Edit</button></td>
-          <form action="/delete-cart/<%= cartItems.id %>" method="POST">
-            <td><button id="<%= cartItems.id%>" class="btn btn-danger">Remove</button></td>
-          </form>
-          <td>10.00</td>
-        </tr>
-        <% }) %>
-          <tr>
+      <tr>
+        <th scope="row">1</th>
+        <td>
+        </td>
+        <td><button class="btn btn-success" onclick="increase()">+</button><input id=inc type="number"><button
+            class="btn btn-warning" onclick="decrease()">-</button></td>
+        <td>5.00</td>
+        <td><button class="btn btn-warning">Edit</button></td>
+        <form action="/delete-cart/" method="POST">
+          <td><button id="" class="btn btn-danger">Remove</button></td>
+        </form>
+        <td>10.00</td>
+      </tr>
+      <tr>
     </tbody>
   </table>
   <div class="total">

@@ -13,6 +13,8 @@ const flash = require('express-flash')
 const session = require('express-session')
 const initializePassport = require('./passport-config');
 const { add } = require('winston');
+const { get } = require('./routes/auth');
+// app.use('/', get);
 require('dotenv').config()
 let errors = [];
 
@@ -56,11 +58,12 @@ app.use(flash())
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { secure: true }
 }))
 
 app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.authenticate('session'));
 
 app.use(express.static("public"))
 app.use(bodyParser.json())
@@ -78,7 +81,9 @@ async function bulkDelete() {
 // Render the home page
 app.get('/home', async (req, res) => {
     const getProduct = await product.findAll()
+    const getUser = await users.findAll()
     res.render('index.ejs', { item: getProduct })
+    console.log(getUser)
 
 })
 // Render the create listing page
@@ -132,27 +137,28 @@ app.get('/footer', (req, res) => {
 })
 
 // Render the cart page
-app.get('/mycart', async (req, res) => {
-    const addedToCart =
-        await cart.findAll({
-            include: [{ model: product }]
-        })
-    // res.send(myCart)
-    res.render('mycart', { myCart: addedToCart })
-})
+app.get('/mycart/',
+    passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+    async (req, res) => {
+        const userId = req.user
+        const validateUser = await users.findAll()
+        const addedToCart =
+            await cart.findAll()
+        // res.send(myCart)
+        res.render('mycart', { myCart: addedToCart }, { user: validateUser })
+    })
 
 // Add item to the cart
 app.post('/add-to-cart/:id', async (req, res) => {
     const id = req.params.id
     const name = req.params.productName
-    const addedToCart = await cart.findOne({
+    const addedToCart = await cart.findOrCreate({
         where: {
-            id: id,
-        },
-        include: product
+            user_id: req.user,
+        }
     })
     console.log("++++++++", product.product)
-    await cart.create(addedToCart)
+    // await cart.create(addedToCart)
     res.redirect('/home')
 })
 

@@ -9,19 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
-        type: Sequelize.STRING
-      },
-      productId: {
-        type: Sequelize.INTEGER
-      },
-      productName: {
-        type: Sequelize.STRING
-      },
-      quantity: {
-        type: Sequelize.STRING
-      },
-      starbuzzcoffeeId: {
+      userId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {

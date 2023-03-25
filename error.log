@@ -1,0 +1,6 @@
+{"body":{"email":"asdasd@adasdas.com","name":"asdasd@asdasd","password":"123"},"level":"error","message":"Name should contain only letters","method":"POST","parameters":{},"path":"/register","service":"signup","timestamp":1679690200128}
+{"body":{"email":"Malek@malek.com","name":"Malk Alarmash","password":"123"},"level":"error","message":"Name should contain only letters","method":"POST","parameters":{},"path":"/register","service":"signup","timestamp":1679720699715}
+{"level":"error","message":"No user with that email","service":"signup","timestamp":1679720715807}
+{"body":{"email":"test2@test","name":"Malek","password":"123"},"level":"error","message":"Invalid email address","method":"POST","parameters":{},"path":"/register","service":"signup","timestamp":1679721009630}
+{"body":{"email":"test2@test.com","name":"test3","password":"123"},"level":"error","message":"Name should contain only letters","method":"POST","parameters":{},"path":"/register","service":"signup","timestamp":1679721069736}
+{"body":{"email":"tes4t@test.com","name":"Info Gmail ","password":"123"},"level":"error","message":"Name should contain only letters","method":"POST","parameters":{},"path":"/register","service":"signup","timestamp":1679721627066}

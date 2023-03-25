@@ -1,3 +1,5 @@
+const { users } = require('./users')
+
 'use strict';
 const {
   Model
@@ -11,22 +13,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      cart.belongsTo(models.users)
+      cart.hasMany(models.cartItem)
+      cart.sync()
     }
   }
-  cart.init({
-    user: DataTypes.STRING,
-    productId: DataTypes.INTEGER,
-    productName: DataTypes.STRING,
-    quantity: DataTypes.STRING,
-    starbuzzcoffeeId: DataTypes.INTEGER,
-    starbuzzcoffeeId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'starbuzzcoffee',
-        key: 'id'
-      }
-    }
-  }, {
+  cart.init({}, {
     sequelize,
     modelName: 'cart',
   });

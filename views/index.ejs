@@ -15,39 +15,34 @@
 
 <body>
     <div class="container justify-content-center mt-5 p-5" style="background-color: #fff9e7;">
-        <h3>This is Home page</h3>
-        <div class="input-group flex-nowrap justify-content-center" style="width: 30%;">
-            <form action="/" method="post" class="d-flex">
-                <input type="text" name="myCart" class="form-control" aria-label="search"
-                    aria-describedby="addon-wrapping">
-                <span class="input-group-text" id="addon-wrapping">Search</span>
-            </form>
-        </div>
-        <img src="public/img/coffeebeans.jpeg" alt="">
-        <div class="container d-flex justify-content-center flex-wrap">
-            <% item.forEach(function (product){%>
-                <div class="card m-5" style="width: 18rem;">
-                    <a href="productDetails/<%= product.id %>"><img src="<%=product.imageurl %>" class="card-img-top"
-                            alt="..."></a>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= product.name%>
-                                <h3 class="card-text">
-                                    price:
-                                    $<%= product.price%>
-                                </h3>
-                        </h5>
-                        <p class="card-text">
-                            <%= product.description %>
-                        </p>
-                        <form action="/add-to-cart/<%= product.id %>" method="POST">
-                            <button><a type="submit" id="<%= product.id %>" class="btn btn-primary">Add to
-                                    Cart</a></button>
-                        </form>
-                    </div>
+        <% user.forEach((user)=>{ %>
+            <h1>Welcome Back <%= user.name %>
+            </h1>
+            <% }) %>
+                <img src="public/img/coffeebeans.jpeg" alt="">
+                <div class="container d-flex justify-content-center flex-wrap">
+                    <% item.forEach(function (product){%>
+                        <div class="card m-5" style="width: 18rem;">
+                            <img src="<%=product.imgUrl %>" class="card-img-top" alt="..."></a>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= product.name%>
+                                        <h3 class="card-text">
+                                            price:
+                                            $<%= product.price%>
+                                        </h3>
+                                </h5>
+                                <p class="card-text">
+                                    <%= product.description %>
+                                </p>
+                                <form action="/add-to-cart/<%= product.id %>" method="POST">
+                                    <button><a type="submit" id="<%= product.id %>" class="btn btn-primary">Add to
+                                            Cart</a></button>
+                                </form>
+                            </div>
+                        </div>
+                        <% }); %>
                 </div>
-                <% }); %>
-        </div>
     </div>
 </body>
 <script>

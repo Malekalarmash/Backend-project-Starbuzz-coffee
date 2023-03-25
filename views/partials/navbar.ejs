@@ -9,79 +9,80 @@
     <title>Navbar</title>
 </head>
 <body> -->
-    <style>
-     * {
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
-        }
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        text-decoration: none;
+        list-style: none;
+        box-sizing: border-box;
+    }
 
-    a.active,a:hover {
-    background-color: lightslategray;
-    transition: .5s;
-        }
+    a.active,
+    a:hover {
+        background-color: lightslategray;
+        transition: .5s;
+    }
 
-.navbar {
-    background-color: black;
-    height: 80px;
-    width: 100%;
-}
+    .navbar {
+        background-color: black;
+        height: 80px;
+        width: 100%;
+    }
 
-.logo {
-    color: white;
-    font-size: 40px;
-    line-height: 10px;
-    padding: 0 40px 40px 40px;
-    font-weight: bold;
-    /* text-decoration: none;
+    .logo {
+        color: white;
+        font-size: 40px;
+        line-height: 10px;
+        padding: 0 40px 40px 40px;
+        font-weight: bold;
+        /* text-decoration: none;
     list-style: none; */
-}
+    }
 
-nav label a {
-    color: white;
-    text-decoration: none;
-    list-style: none;
-}
+    nav label a {
+        color: white;
+        text-decoration: none;
+        list-style: none;
+    }
 
-.mylist {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-right: 20px;
-}
+    .mylist {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin-right: 20px;
+    }
 
-nav ul li {
-    display: inline-block;
-    line-height: 80px;
-    margin: 0 5px;
-}
+    nav ul li {
+        display: inline-block;
+        line-height: 80px;
+        margin: 0 5px;
+    }
 
-nav ul li a {
-    color: white;
-    font-size: 20px;
-    padding: 10px 18px;
-    border-radius: 5px;
-    text-decoration: none;
-}
-    </style>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <nav class="navbar bg-dark" data-bs-theme="dark">
-        <label class="logo"><a href="/home">Starbuzz</label></a>
-        <ul class="mylist">
-            <li><a href="#" class="activate">Favorite Items</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/register">Sign Up</a></li>
-            <!-- <select name="Login" id="login">
+    nav ul li a {
+        color: white;
+        font-size: 20px;
+        padding: 10px 18px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<nav class="navbar bg-dark" data-bs-theme="dark">
+    <label class="logo"><a href="/home">Starbuzz</label></a>
+    <ul class="mylist">
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Sign Up</a></li>
+        <!-- <select name="Login" id="login">
                 <option value="Sign in" disabled>Sign In</option>
                 <option value="Register" disabled>Register</option>
                 <option value="Logout" disabled>Logout</option>
             </select> -->
-            <li><a href="/mycart"><i class="material-icons">shopping_cart</i></a></li>
-        </ul>
-    </nav>
+        <li><a href="/mycart"><i class="material-icons">shopping_cart</i></a></li>
+    </ul>
+</nav>
 
 </body>
 <script src=""></script>
+
 </html>

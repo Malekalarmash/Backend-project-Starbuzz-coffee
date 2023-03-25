@@ -74,17 +74,21 @@ app.use('/css', express.static(__dirname + 'public/css'))
 
 
 // Use this function to bulk delete 
-async function bulkDelete() {
-    const getProduct = await product.destroy({ where: { id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] } })
-    // console.log(getProduct)
-}
+// async function bulkDelete() {
+//     const getProduct = await product.destroy({ where: { id: [1, 2, 3, 4] } })
+//     // console.log(getProduct)
+// }
 // bulkDelete()
 
 // Render the home page
 app.get('/home', async (req, res) => {
     const getProduct = await product.findAll()
-    const getUser = await users.findAll()
-    res.render('index.ejs', { item: getProduct })
+    const getUser = await users.findAll({
+        where: {
+            id: req.user.id
+        }
+    })
+    res.render('index.ejs', { item: getProduct, user: getUser })
     // console.log(getUser)
 
 })
@@ -259,12 +263,12 @@ app.post('/register', async (req, res) => {
             } else {
                 const post = await users.create({ name, email, password: hash, carts: [{}] }, { include: cart });
 
-                res.status(200).render('/login');
+                res.status(200).redirect('/login');
             }
         });
     }
 
-    res.render('register.ejs', { errors: errors });
+    // res.render('register.ejs', { errors: errors });
 });
 
 

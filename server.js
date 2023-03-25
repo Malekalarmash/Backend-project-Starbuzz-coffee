@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
 const { product } = require('./models')
 const { cart } = require('./models')
+const { cartItem } = require('./models')
 const ejs = require("ejs");
 const { users } = require('./models')
 const bcrypt = require('bcrypt');
@@ -14,6 +15,7 @@ const session = require('express-session')
 const initializePassport = require('./passport-config');
 const { add } = require('winston');
 const { get } = require('./routes/auth');
+var SQLiteStore = require('connect-sqlite3')(session);
 // app.use('/', get);
 require('dotenv').config()
 let errors = [];
@@ -59,7 +61,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true }
+    store: new SQLiteStore({ db: 'session.db', dir: './var/db' })
 }))
 
 app.use(passport.initialize())
@@ -74,7 +76,7 @@ app.use('/css', express.static(__dirname + 'public/css'))
 // Use this function to bulk delete 
 async function bulkDelete() {
     const getProduct = await product.destroy({ where: { id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] } })
-    console.log(getProduct)
+    // console.log(getProduct)
 }
 // bulkDelete()
 
@@ -83,7 +85,7 @@ app.get('/home', async (req, res) => {
     const getProduct = await product.findAll()
     const getUser = await users.findAll()
     res.render('index.ejs', { item: getProduct })
-    console.log(getUser)
+    // console.log(getUser)
 
 })
 // Render the create listing page
@@ -115,10 +117,10 @@ app.post('/createListing', async (req, res) => {
 
     else {
         const newProduct = {
-            productName: productName,
+            name: productName,
             price: price,
-            description: description,
-            imageurl: imageurl
+            des: description,
+            imgUrl: imageurl
         }
         await product.create(newProduct)
         res.redirect('/home')
@@ -138,36 +140,54 @@ app.get('/footer', (req, res) => {
 
 // Render the cart page
 app.get('/mycart/',
-    passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+    passport.session({ failureRedirect: '/login' }),
     async (req, res) => {
-        const userId = req.user
-        const validateUser = await users.findAll()
-        const addedToCart =
-            await cart.findAll()
-        // res.send(myCart)
-        res.render('mycart', { myCart: addedToCart }, { user: validateUser })
+        const getUserCart = await cart.findOne({
+            where: {
+                userId: req.user.id
+            }
+        })
+        const cartItems = await cartItem.findAll({
+            where: {
+                cartId: getUserCart.id,
+            },
+            include: product
+        })
+        console.log(cartItems)
+        // const addedProduct = await product.findAll({
+        //     where: {
+        //         cartId: pro
+        //     }
+        // })
+        res.render('mycart', { addedToCart: cartItems })
+
     })
 
 // Add item to the cart
-app.post('/add-to-cart/:id', async (req, res) => {
-    const id = req.params.id
-    const name = req.params.productName
-    const addedToCart = await cart.findOrCreate({
-        where: {
-            user_id: req.user,
-        }
+app.post('/add-to-cart/:productId',
+    // This will auth the user so they can add to the cart 
+    passport.session({ failureRedirect: '/login' }),
+    async (req, res) => {
+        const productId = req.params.productId
+        const userId = req.user.id
+        const findUser = await users.findOne({ where: { id: userId } })
+        const findCart = await cart.findOne({ where: { userId: userId } })
+        const addedToCart = await cartItem.create({
+            cartId: findCart.id,
+            productId: productId
+        })
+
+        // console.log("++++++++", addedToCart)
+        // await cart.create(addedToCart)
+        res.redirect('/mycart')
     })
-    console.log("++++++++", product.product)
-    // await cart.create(addedToCart)
-    res.redirect('/home')
-})
 
 // Deleteing a cart item
 app.post('/delete-cart/:id', async (req, res) => {
-    const id = req.params.id
-    const deleteCartItem = await cart.destroy({
+    const cartItemId = req.params.id
+    const deleteCartItem = await cartItem.destroy({
         where: {
-            id: id
+            id: cartItemId
         }
     })
     if (deleteCartItem === 0) {
@@ -180,13 +200,13 @@ app.put('/', (req, res) => {
 
 })
 
-app.delete('/mycart/delete/:id', async (req, res) => {
-    const id = req.params.id;
-    let removeCoffee = await product.destroy({
-        where: { id },
-    });
-    res.send(String(removeCoffee));
-})
+// app.delete('/mycart/delete/:id', async (req, res) => {
+//     const id = req.params.id;
+//     let removeCoffee = await product.destroy({
+//         where: { id },
+//     });
+//     res.send(String(removeCoffee));
+// })
 
 
 function calculateTotal(item, req) {
@@ -237,8 +257,9 @@ app.post('/register', async (req, res) => {
             if (err) {
                 res.status(500).send('Internal Server Error')
             } else {
-                const post = await users.create({ name, email, password: hash });
-                res.redirect('/login');
+                const post = await users.create({ name, email, password: hash, carts: [{}] }, { include: cart });
+
+                res.status(200).render('/login');
             }
         });
     }
